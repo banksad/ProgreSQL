@@ -1,8 +1,43 @@
--- Adding new columns for outlier weights, Winsorized return, and a flag indicating whether a row was Winsorized
-ALTER TABLE winsorize_example ADD COLUMN o_weight NUMERIC;
-ALTER TABLE winsorize_example ADD COLUMN k_value NUMERIC;
-ALTER TABLE winsorize_example ADD COLUMN modified_return NUMERIC;
-ALTER TABLE winsorize_example ADD COLUMN winsorization_flag TEXT;
+-- Checking and then adding new columns for outlier weights, Winsorized return, and a flag indicating whether a row was Winsorized
+-- Check and add o_weight column if it doesn't exist
+DO $$
+BEGIN
+    BEGIN
+        ALTER TABLE winsorize_example ADD COLUMN o_weight NUMERIC;
+    EXCEPTION
+        WHEN duplicate_column THEN -- Do nothing, column already exists
+    END;
+END $$;
+
+-- Check and add k_value column if it doesn't exist
+DO $$
+BEGIN
+    BEGIN
+        ALTER TABLE winsorize_example ADD COLUMN k_value NUMERIC;
+    EXCEPTION
+        WHEN duplicate_column THEN -- Do nothing, column already exists
+    END;
+END $$;
+
+-- Check and add modified_return column if it doesn't exist
+DO $$
+BEGIN
+    BEGIN
+        ALTER TABLE winsorize_example ADD COLUMN modified_return NUMERIC;
+    EXCEPTION
+        WHEN duplicate_column THEN -- Do nothing, column already exists
+    END;
+END $$;
+
+-- Check and add winsorization_flag column if it doesn't exist
+DO $$
+BEGIN
+    BEGIN
+        ALTER TABLE winsorize_example ADD COLUMN winsorization_flag TEXT;
+    EXCEPTION
+        WHEN duplicate_column THEN -- Do nothing, column already exists
+    END;
+END $$;
 
 -- Calculate the mean return for each cell. This is used to calculate the threshold (k_value) for Winsorization.
 WITH CellMean AS (
